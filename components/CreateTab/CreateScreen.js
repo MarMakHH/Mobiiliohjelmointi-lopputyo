@@ -9,8 +9,8 @@ export default function CreateScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <Button
-            title="Add Words"
-            onPress={() => navigation.navigate('Add Words')}
+                title="Add Words"
+                onPress={() => navigation.navigate('Add Words')}
             />
         </SafeAreaView>
     )

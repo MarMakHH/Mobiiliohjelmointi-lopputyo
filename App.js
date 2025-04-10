@@ -1,7 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet } from 'react-native';
 import LearnScreen from './components/LearnTab/LearnScreen';
 import CreateScreen from './components/CreateTab/CreateScreen';
 import SettingsScreen from './components/SettingsScreen';
@@ -10,41 +8,43 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AddWords from './components/CreateTab/AddWords';
 import CardMode from './components/LearnTab/CardMode';
 import { NavigationContainer } from '@react-navigation/native';
+import { SQLiteProvider } from 'expo-sqlite';
+import * as SQLite from 'expo-sqlite';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function TabNavigator() {
   return (
-    
-      <Tab.Navigator screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+    <Tab.Navigator screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
 
-          let iconName;
+        let iconName;
 
-          if (route.name === 'Learn') {
-            iconName = 'book';
-          } else if (route.name === 'Create') {
-            iconName = 'create';
-          } else if (route.name === 'Settings') {
-            iconName = 'settings'
-          }
+        if (route.name === 'Learn') {
+          iconName = 'book';
+        } else if (route.name === 'Create') {
+          iconName = 'create';
+        } else if (route.name === 'Settings') {
+          iconName = 'settings'
+        }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-      })}>
-        <Tab.Screen name='Learn' component={LearnStackNavigator} options={{ headerShown: false }}/>
-        <Tab.Screen name='Create' component={CreateStackNavigator} options={{ headerShown: false }}/>
-        <Tab.Screen name='Settings' component={SettingsScreen} />
-      </Tab.Navigator>
+        return <Ionicons name={iconName} size={size} color={color} />;
+      },
+    })}>
+      <Tab.Screen name='Learn' component={LearnStackNavigator} options={{ headerShown: false }} />
+      <Tab.Screen name='Create' component={CreateStackNavigator} options={{ headerShown: false }} />
+      <Tab.Screen name='Settings' component={SettingsScreen} />
+    </Tab.Navigator>
   );
 }
 
 function LearnStackNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name='Learn' component={LearnScreen}/>
-      <Stack.Screen name='Wordcards' component={CardMode}/>
+      <Stack.Screen name='Learn' component={LearnScreen} />
+      <Stack.Screen name='Wordcards' component={CardMode} />
     </Stack.Navigator>
   )
 }
@@ -53,16 +53,31 @@ function CreateStackNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name='Create' component={CreateScreen} />
-      <Stack.Screen name='Add Words' component={AddWords}/>
+      <Stack.Screen name='Add Words' component={AddWords} />
     </Stack.Navigator>
   )
 }
 
+//const db = SQLite.openDatabaseSync("wordsdb");
+
 export default function App() {
+
+  const initialize = async (db) => {
+    db.execAsync(`
+      CREATE TABLE IF NOT EXISTS words (id INTEGER PRIMARY KEY NOT NULL, title TEXT, firstLanguage TEXT, secondLanguage TEXT, firstWord TEXT, secondWord TEXT);
+      `);
+  }
+
   return (
-    <NavigationContainer>
-      <TabNavigator />
-    </NavigationContainer>
+    <SQLiteProvider
+      databaseName='wordsdb.db'
+      onInit={initialize}
+      onError={error => console.error('Could not open database', error)}
+    >
+      <NavigationContainer>
+        <TabNavigator />
+      </NavigationContainer>
+    </SQLiteProvider>
   )
 }
 
