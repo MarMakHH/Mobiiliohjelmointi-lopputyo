@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function LearnScreen() {
+export default function CardMode() {
   return (
     <SafeAreaView style={styles.container} >
-      <Text>Learn</Text>
+      <Text>Wordcards</Text>
     </SafeAreaView>
   )
 }
