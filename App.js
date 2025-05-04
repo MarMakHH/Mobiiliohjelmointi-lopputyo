@@ -9,6 +9,7 @@ import AddWords from './components/CreateTab/AddWords';
 import CardMode from './components/LearnTab/CardMode';
 import { NavigationContainer } from '@react-navigation/native';
 import { SQLiteProvider } from 'expo-sqlite';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 
 const Tab = createBottomTabNavigator();
@@ -43,7 +44,7 @@ function LearnStackNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen name='Learn' component={LearnScreen} />
-      <Stack.Screen name='Wordcards' component={CardMode} />
+      <Stack.Screen name='Flashcards' component={CardMode} />
     </Stack.Navigator>
   )
 }
@@ -66,15 +67,17 @@ export default function App() {
   }
 
   return (
-    <SQLiteProvider
-      databaseName='wordsdb.db'
-      onInit={initialize}
-      onError={error => console.error('Could not open database', error)}
-    >
-      <NavigationContainer>
-        <TabNavigator />
-      </NavigationContainer>
-    </SQLiteProvider>
+    <SafeAreaProvider>
+      <SQLiteProvider
+        databaseName='wordsdb.db'
+        onInit={initialize}
+        onError={error => console.error('Could not open database', error)}
+      >
+        <NavigationContainer>
+          <TabNavigator />
+        </NavigationContainer>
+      </SQLiteProvider>
+    </SafeAreaProvider>
   )
 }
 

@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native";
+import { Card, Text, Button } from "react-native-paper";
 
 export default function LearnScreen() {
 
@@ -8,10 +9,15 @@ export default function LearnScreen() {
 
   return (
     <SafeAreaView style={styles.container} >
-      <Button
-        title="Memorycards"
-        onPress={() => navigation.navigate('Wordcards')}
-      />
+      <Card>
+        <Card.Content>
+          <Text variant="titleLarge">Flashcard</Text>
+          <Text>Pick a word selection from your collection and practice memorization.</Text>
+        </Card.Content>
+        <Card.Actions>
+          <Button mode="contained" onPress={() => navigation.navigate('Flashcards')}>Start</Button>
+        </Card.Actions>
+      </Card>
     </SafeAreaView>
   )
 }
