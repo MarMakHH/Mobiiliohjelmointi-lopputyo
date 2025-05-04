@@ -9,7 +9,6 @@ import AddWords from './components/CreateTab/AddWords';
 import CardMode from './components/LearnTab/CardMode';
 import { NavigationContainer } from '@react-navigation/native';
 import { SQLiteProvider } from 'expo-sqlite';
-import * as SQLite from 'expo-sqlite';
 
 
 const Tab = createBottomTabNavigator();
@@ -57,8 +56,6 @@ function CreateStackNavigator() {
     </Stack.Navigator>
   )
 }
-
-//const db = SQLite.openDatabaseSync("wordsdb");
 
 export default function App() {
 
