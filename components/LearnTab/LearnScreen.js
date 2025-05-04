@@ -18,6 +18,15 @@ export default function LearnScreen() {
           <Button mode="contained" onPress={() => navigation.navigate('Flashcards')}>Start</Button>
         </Card.Actions>
       </Card>
+      <Card>
+        <Card.Content>
+          <Text variant="titleLarge">Quiz</Text>
+          <Text>A multiple choice quiz, where you try to pick the correct translation.</Text>
+        </Card.Content>
+        <Card.Actions>
+          <Button mode="contained" onPress={() => navigation.navigate('Quiz')}>Start</Button>
+        </Card.Actions>
+      </Card>
     </SafeAreaView>
   )
 }

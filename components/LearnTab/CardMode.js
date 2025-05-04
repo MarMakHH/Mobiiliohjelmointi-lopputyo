@@ -2,7 +2,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native";
-import { Button, Card, Text } from "react-native-paper";
+import { Button, Card, Menu, PaperProvider, Text } from "react-native-paper";
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 
@@ -12,6 +12,8 @@ export default function CardMode() {
     const [words, setWords] = useState([]);
     const [hasTitle, setHasTitle] = useState(false);
     const [wordIndex, setWordIndex] = useState(0);
+    const [visible, setVisible] = useState(false);
+
 
     const db = useSQLiteContext();
 
@@ -68,6 +70,10 @@ export default function CardMode() {
         }
     }
 
+    const openMenu = () => setVisible(true);
+
+    const closeMenu = () => setVisible(false);
+
     useEffect(() => { getTitles() }, []);
 
     return (
@@ -85,9 +91,17 @@ export default function CardMode() {
                     <Button mode="contained-tonal" onPress={() => cycleWords()}>Next</Button>
                 </>
                 :
-                titles.map(title => {
-                    return <Button mode="contained" key={title.title} onPress={() => getWords(title.title)}>{title.title}</Button>
-                })
+                <PaperProvider>
+
+                    <Menu
+                        visible={visible}
+                        onDismiss={closeMenu}
+                        anchor={<Button mode="contained" onPress={openMenu}>Select word collection</Button>}>
+                        {titles.map(title => {
+                            return <Menu.Item key={title.title} title={title.title} onPress={() => getWords(title.title)} />
+                        })}
+                    </Menu>
+                </PaperProvider>
             }
 
         </SafeAreaView>

@@ -10,6 +10,7 @@ import CardMode from './components/LearnTab/CardMode';
 import { NavigationContainer } from '@react-navigation/native';
 import { SQLiteProvider } from 'expo-sqlite';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import QuizMode from './components/LearnTab/QuizMode';
 
 
 const Tab = createBottomTabNavigator();
@@ -45,6 +46,7 @@ function LearnStackNavigator() {
     <Stack.Navigator>
       <Stack.Screen name='Learn' component={LearnScreen} />
       <Stack.Screen name='Flashcards' component={CardMode} />
+      <Stack.Screen name='Quiz' component={QuizMode} />
     </Stack.Navigator>
   )
 }
