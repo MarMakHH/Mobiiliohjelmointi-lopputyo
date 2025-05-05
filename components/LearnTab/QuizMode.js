@@ -60,7 +60,7 @@ export default function QuizMode() {
 
     const checkAnswer = () => {
         if (answer == quiz[0].correctAnswer) {
-            setScore(score + 1);
+            setScore(current => current + 1);
         }
         if (quizIndex == quiz.length - 1) {
             setHasTitle(false)

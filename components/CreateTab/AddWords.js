@@ -1,7 +1,8 @@
-import { Button, FlatList, StyleSheet, Text, TextInput, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native";
 import { useEffect, useState } from "react";
 import { useSQLiteContext } from "expo-sqlite";
+import { Button, List, Text, TextInput } from "react-native-paper";
 
 export default function AddWords() {
 
@@ -11,6 +12,7 @@ export default function AddWords() {
     const [firstWord, setFirstWord] = useState('');
     const [secondWord, setSecondWord] = useState('');
     const [words, setWords] = useState([]);
+    const [hasTitle, setHasTitle] = useState(false);
 
     const db = useSQLiteContext();
 
@@ -21,62 +23,87 @@ export default function AddWords() {
         } catch (error) {
             console.error('Could not add item', error);
         }
+        setFirstWord('');
+        setSecondWord('');
     };
 
     const updateList = async () => {
         try {
-            const list = await db.getAllAsync('SELECT * from words');
+            const list = await db.getAllAsync('SELECT * FROM words WHERE title = ?', title);
             setWords(list);
         } catch (error) {
             console.error('Could not get items', error);
         }
     }
 
+    const deleteItem = async (id) => {
+        try {
+            await db.runAsync('DELETE FROM words WHERE id = ?', id)
+            updateList();
+        } catch (error) {
+            console.error('Could not get items', error);
+        }
+    }
+
+    const handleNext = () => {
+        updateList();
+        setHasTitle(true)
+    }
+
     useEffect(() => { updateList() }, []);
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Text>Add Words</Text>
-            <TextInput
-                placeholder="Title"
-                onChangeText={title => setTitle(title)}
-                value={title}
-            />
-            <TextInput
-                placeholder="firstLanguage"
-                onChangeText={firstLanguage => setFirstLanguage(firstLanguage)}
-                value={firstLanguage}
-            />
-            <TextInput
-                placeholder="secondLanguage"
-                onChangeText={secondLanguage => setSecondLanguage(secondLanguage)}
-                value={secondLanguage}
-            />
-            <TextInput
-                placeholder="firstWord"
-                onChangeText={firstWord => setFirstWord(firstWord)}
-                value={firstWord}
-            />
-            <TextInput
-                placeholder="secondWord"
-                onChangeText={secondWord => setSecondWord(secondWord)}
-                value={secondWord}
-            />
-            <Button onPress={saveItem} title="Save" />
-            <FlatList
-                keyExtractor={item => item.id.toString()}
-                renderItem={({ item }) =>
-                    <View>
-                        <Text>{item.title}</Text>
-                        <Text>{item.firstLanguage} </Text>
-                        <Text>{item.firstWord}</Text>
-                        <Text>{item.secondLanguage}</Text>
-                        <Text>{item.secondWord}</Text>
-                        <Text style={{ color: '#ff0000' }} onPress={() => deleteItem(item.id)}>Done</Text>
-                    </View>
-                }
-                data={words}
-            />
+        <SafeAreaView >
+            {!hasTitle ?
+                <>
+                    <Text variant="titleLarge">Set title and languages</Text>
+                    <TextInput
+                        label="Title"
+                        onChangeText={title => setTitle(title)}
+                        value={title}
+                    />
+                    <TextInput
+                        label="First language"
+                        onChangeText={firstLanguage => setFirstLanguage(firstLanguage)}
+                        value={firstLanguage}
+                    />
+                    <TextInput
+                        label="Second language"
+                        onChangeText={secondLanguage => setSecondLanguage(secondLanguage)}
+                        value={secondLanguage}
+                    />
+                    <Button mode="contained" onPress={() => handleNext()}>Next</Button>
+                </>
+                :
+                <>
+                    <Button mode="contained" onPress={() => setHasTitle(false)}>Cancel</Button>
+                    <Text>Add words to {title}</Text>
+                    <TextInput
+                        label={firstLanguage}
+                        onChangeText={firstWord => setFirstWord(firstWord)}
+                        value={firstWord}
+                    />
+                    <TextInput
+                        label={secondLanguage}
+                        onChangeText={secondWord => setSecondWord(secondWord)}
+                        value={secondWord}
+                    />
+                    <Button mode="contained" onPress={() => saveItem()}>Add</Button>
+                    <FlatList
+                        keyExtractor={item => item.id.toString()}
+                        renderItem={({ item }) =>
+                            <View>
+                                <List.Item
+                                    title={item.firstWord}
+                                    description={item.secondWord}
+                                    left={props => <Button onPress={() => deleteItem(item.id)}>Delete</Button>}
+                                />
+                            </View>
+                        }
+                        data={words}
+                    />
+                </>
+            }
         </SafeAreaView>
     )
 }
