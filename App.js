@@ -11,6 +11,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SQLiteProvider } from 'expo-sqlite';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import QuizMode from './components/LearnTab/QuizMode';
+import SupabaseScreen from './components/CreateTab/Supabase';
 
 
 const Tab = createBottomTabNavigator();
@@ -56,6 +57,7 @@ function CreateStackNavigator() {
     <Stack.Navigator>
       <Stack.Screen name='Create' component={CreateScreen} />
       <Stack.Screen name='Add Words' component={AddWords} />
+      <Stack.Screen name='Supabase' component={SupabaseScreen}/>
     </Stack.Navigator>
   )
 }

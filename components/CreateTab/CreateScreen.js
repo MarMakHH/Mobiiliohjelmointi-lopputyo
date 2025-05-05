@@ -18,6 +18,15 @@ export default function CreateScreen() {
                     <Button mode="contained" onPress={() => navigation.navigate('Add Words')}>Start</Button>
                 </Card.Actions>
             </Card>
+            <Card>
+                <Card.Content>
+                    <Text variant="titleLarge">Supabase</Text>
+                    <Text>Load and save words from Supabase</Text>
+                </Card.Content>
+                <Card.Actions>
+                    <Button mode="contained" onPress={() => navigation.navigate('Supabase')}>Start</Button>
+                </Card.Actions>
+            </Card>
         </SafeAreaView>
     )
 }
